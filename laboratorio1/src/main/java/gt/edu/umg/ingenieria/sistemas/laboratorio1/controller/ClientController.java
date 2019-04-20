@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import javax.servlet.ServletContext;
 
 /**
  *
@@ -19,11 +20,13 @@ public class ClientController {
 
     private final ReportService _reportService;
     private final ClientService _clientService;
+    private final ServletContext _servletcontext;
 
     @Autowired
-    public ClientController(ReportService reportService, ClientService clientService) {
+    public ClientController(ReportService reportService, ClientService clientService, ServletContext servletContext) {
         _reportService = reportService;
         _clientService = clientService;
+        _servletcontext = servletContext;
     }
     @GetMapping("/buscarpoId")
     public Client GBId(@RequestParam(name = "id") long id) {
@@ -67,7 +70,7 @@ public class ClientController {
 
     @GetMapping("/generarReporteClientes")
     public String generaReport() {
-        return this._reportService.generaRepo();
+        return this._reportService.generaRepo( this._clientService.GTClients(), _servletcontext);
     }
 
 
